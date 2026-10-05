@@ -15,6 +15,7 @@
         <strong class="stat-value">{{ card.value }}</strong>
       </article>
     </div>
+    <p class="basis-note">在运泵站与泵站台账同口径，以最后一次责任移交为准：{{ stationBasis }}</p>
     <table class="data-table">
       <thead>
         <tr><th>业务模块</th><th>今日新增</th><th>待处理</th><th>异常量</th></tr>
@@ -42,11 +43,13 @@ import type { OverviewResult } from '@/data/types'
 
 const cards = ref<OverviewResult['cards']>([])
 const moduleRows = ref<OverviewResult['modules']>([])
+const stationBasis = ref('')
 
 function refresh() {
   const payload = loadOverview()
   cards.value = payload.cards
   moduleRows.value = payload.modules
+  stationBasis.value = payload.stationBasis
 }
 
 onMounted(refresh)
