@@ -1,6 +1,23 @@
 import { MODULE_BY_KEY } from '@/data/modules'
-import { allRows, listRows, resetRows, saveRows } from '@/data/local-store'
+import { allRows, countRebuildPlans, countRunningStations, listRows, resetRows, saveRows } from '@/data/local-store'
 import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } from '@/data/types'
+
+export {
+  assignStation,
+  fieldHistory,
+  getStation,
+  handoverStation,
+  handoversOf,
+  isUnassigned,
+  ownershipLedger,
+  runStationAction,
+  runningStationCount,
+  saveStationEdit,
+  stationVersion,
+  unassignedStations,
+} from './pump-service'
+export { resetAllRows } from '@/data/local-store'
+export { listRows } from '@/data/local-store'
 
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
 const NEGATIVE_ACTIONS = ['撤销', '作废', '拒绝', '驳回', '停用', '忽略', '下线', '回滚']
@@ -98,6 +115,9 @@ export function loadOverview(): OverviewResult {
   const cards = [
     { label: '业务模块', value: modules.length },
     { label: '登记总量', value: modules.reduce((sum, item) => sum + item.created, 0) },
+    // 在运站数与泵站档案页必须是同一个数：两处都调 countRunningStations，以最后一次责任移交后的档案为准
+    { label: '在运泵站（档案口径）', value: countRunningStations() },
+    { label: '待重编调度方案', value: countRebuildPlans() },
     { label: '待处理', value: modules.reduce((sum, item) => sum + item.pending, 0) },
     { label: '异常量', value: modules.reduce((sum, item) => sum + item.abnormal, 0) },
   ]

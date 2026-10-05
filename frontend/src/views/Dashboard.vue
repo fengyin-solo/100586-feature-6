@@ -10,11 +10,15 @@
       </div>
     </header>
     <div class="stat-row">
-      <article v-for="card in cards" :key="card.label" class="stat-card">
+      <article v-for="card in cards" :key="card.label" class="stat-card" :class="{ 'stat-highlight': card.label.includes('在运') || card.label.includes('待重编') }">
         <span class="stat-label">{{ card.label }}</span>
         <strong class="stat-value">{{ card.value }}</strong>
       </article>
     </div>
+    <p class="page-desc" style="margin: 0 0 12px;">
+      「在运泵站」直接取泵站台账口径（与台账页是同一个数），以最后一次责任移交后的责任划分为准；
+      泵站停用办结会同步核减，并把该片区在执行的调度方案退回「待重编」。
+    </p>
     <table class="data-table">
       <thead>
         <tr><th>业务模块</th><th>今日新增</th><th>待处理</th><th>异常量</th></tr>
